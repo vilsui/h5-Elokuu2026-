@@ -74,3 +74,38 @@ Hyökkäyspinta-alan kasvu ja ajankäyttö: Ensimmäinen skannaus kesti todennä
 
 <img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/522502f5-82e1-4575-b723-45e136c33f88" />
 
+E) Avasin Kalin terminaalin ja loin ensin tavallisen tekstitiedoston komenolla "echo "Tämä on erittäin salainen viesti" > salaisuus.txt"
+Pakkasin ja salasin tiedoston 7-Zipillä käyttäen salasanaa "snoopy" (joka löytyy  sanalistoista) komennolla: 7z a -psnoopy kohde.7z salaisuus.txt
+
+<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/3191b356-7641-4899-ba11-ee8fcf58a475" />
+
+Nyt lukittu tiedosto nimeltä kohde.7z. Poistetaa. alkuperäinen tekstitiedosto, jotta se ei "paljasta" sisältöä komenolla: rm salaisuus.txt.
+
+F) Avassin Kalin terminaalin ja loin tiivisteen sanasta "iloveyou" (joka löytyi RockYou-listalta). Komento laskee tiivisteen ja tallentaa sen tekstitiedostoon. Tässä oli aljon säätöä 
+
+<img width="2784" height="1904" alt="image" src="https://github.com/user-attachments/assets/49bfefd5-a3a3-430a-bf5d-774645fa06dd" />
+
+E) Salasanatiivisteen luominen ja murtaminen (SHA-256)
+Tehtävän tarkoituksena oli luoda itse salasanatiiviste ja murtaa se sanakirjahyökkäyksellä. Kohtasin prosessin aikana muutamia teknisiä haasteita, jotka opettivat komentorivin tarkkaa käyttöä ja virtuaalikoneen rajoitteita.
+
+1. Tiivisteen luonti
+
+Korjasin syntaksin muotoon echo -n "iloveyou" | sha256sum | awk '{print $1}' > sha256_tiiviste.txt. Tämä syötti sanan oikein sha256sum-ohjelmalle ja loi tiedostoon oikean SHA-256-tiivisteen.
+
+2. Sanalistan (rockyou.txt) hankinta
+
+Yritin käyttää Kalin oletussanalistaa, mutta törmäsin puuttuviin tiedostoihin. Kun yritin ladata listan wget-komennolla verkosta, sain virheitä kuten zsh: unknown file attribute: h ja 404 Not Found. Nämä johtuivat komentorivin kopiointivirheistä ja vanhentuneesta URL-osoitteesta.
+
+Latasin lopulta valmiiksi puretun sanalistan toimivasta lähteestä komennolla:
+wget [https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt](https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt)
+
+F) Tiivisteen murtaminen
+
+Kun ajoin Hashcatin komennolla hashcat -m 1400 sha256_tiiviste.txt rockyou.txt, ohjelma palautti virheen No devices found/left. Tämä johtui siitä, että UTM-virtuaalikoneellani ei ollut Hashcatin oletuksena vaatimaa GPU-kiihdytystä tai prosessorin OpenCL-ajureita asennettuna.
+
+Asensin Kalin pakettienhallinnasta prosessorille tarkoitetun OpenCL-ajurin komennolla sudo apt install pocl-opencl-icd. (Tämän jälkeen murtokomento meni onnistuneesti läpi).
+
+Tulos: Ohjelma suoritti sanakirjahyökkäyksen onnistuneesti ja paljasti (Status: Cracked), että tiivisteen taustalla oleva alkuperäinen salasana oli "iloveyou".
+
+
+Lähteet:
