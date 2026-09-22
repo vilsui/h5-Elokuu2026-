@@ -1,4 +1,8 @@
-# h5-Elokuu2026
+Tunkeutumistestaus, Tero Karvinen 
+Tunkeutumistestaus - ICI005AS3A-3007 - tt7 - 2026p1 - Tero - to 11:00 pa5001
+Ville Suikki
+
+<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/bf4a6035-7e6a-46f0-a0f6-7ae8e01773e7" /># h5-Elokuu2026
 
 x) Lue/katso ja tiivistä. (Tässä x-alakohdassa ei tarvitse tehdä testejä tietokoneella, vain lukeminen tai kuunteleminen ja tiivistelmä riittää. Tiivistämiseen riittää muutama ranskalainen viiva kustakin artikkelista. Kannattaa lisätä myös jokin oma ajatus, idea, huomio tai kysymys.)
 
@@ -22,4 +26,51 @@ Crack File Password With John
 
 Huomiona
 Kiinnostavaa huomata ero miten suorien salasanojen ja tiedostojen salausten murtaminen eroaa toisistaan vaikka taustalla oleva periaate on sama. Tiedostoihin kohdistuvat hyökkäykset vaatii ylimääräisen välivaiheen kuten Zip2john. 
+
+A) Olen asentanut Kalin koneeseeni ja käytän UTM'n kautta Kali linux ARM64 QEMU 10.0 ARM virtual machine versiota. Käytössäni Macbook Pro 2026. Asensin Kalin imagen kautta. Ohessa vielä versio komennolla cat /etc/os-release cat /etc/os-release 
+
+B) Kalin irrottaminen verkosta
+Irrotin kalin verkosta valitsemalla kalin sammutuksen jälkeen että asetus oli vain host only. Tein tämän jälkeen ping -4 8.8.8.8 jonka tukoksena oli seuraava <img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/49bc5662-a98b-403d-8795-c90b3563b60d" />
+
+C) Avasin kalin komentorivin ja ajointehtvänannon komennon "nmap -T4 -A localhost"
+
+- nmap:Työkalu (Network Mapper), joka on alan standardi verkkoskannaukseen. Ilman erillistä porttimääritystä (kuten -p-) se skannaa oletuksena aina 1000 yleisintä TCP-porttia.
+
+- -T4: Ajoitusmalli eli Timing template. Nmapin nopeusasteikko on T0–T5. T4 tarkoittaa nopeaa skannausta, joka olettaa verkkoyhteyden olevan luotettava. Se nopeuttaa tulosten saamista huomattavasti verrattuna oletukseen (T3).
+
+- -A rankempi skannaus, joka on  "all-inclusive" -parametri, joka kytkee kerralla päälle käyttöjärjestelmän tunnistuksen (OS detection), palvelujen versiotunnistuksen (Version detection, -sV), nmapin oletusskriptit (Script scanning, -sC) sekä reitityksen jäljityksen (Traceroute). Mahdollistaa saamaan pelkän portin tilan (auki/kiinni) lisäksi selville mahdollisimman tarkasti, mikä ohjelmisto portin takana pyörii.
+
+- localhost: Skannauksen kohde. Tarkoittaa konetta itseään (IP-osoite 127.0.0.1).
+  
+<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/91fc5c27-ff10-4465-99a4-206b5da1b2e9" />
+
+- Nmapin tulosteessa lukee: Not shown: 1000 closed tcp ports (reset). Tämä tarkoittaa, että Kali-koneellani ei ole tällä hetkellä yhtään palvelua kuuntelemassa verkkoliikennettä.
+
+- D) Muutin UTM'stä asetukset että verkko on "jaettu verkko" takaisin ja käynnistin Kalin uudestaan.
+
+- Asennetaan demonit:
+Asensin kaksi perinteistä ja selkeää demonia: Apache2 (web-palvelin) ja vsftpd (FTP-tiedostonsiirtopalvelin). Komennolla:
+sudo apt update && sudo apt install apache2 vsftpd -y
+
+<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/9cc7a4e9-bbae-45d7-b75e-0ccdc2d09172" />
+
+Käynnistin demonit:
+varmistin, että palvelut ovat päällä ja kuuntelevat portteja komennoilla:
+sudo systemctl start apache2
+sudo systemctl start vsftpd
+
+skannattiin uudelleen:
+nmap -T4 -A localhost
+
+<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/47d3de6a-2a23-47ad-b0ee-539b9f93be18" />
+
+D) Avoimet portit: Ensimmäisessä skannauksessa kaikki 1000 porttia olivat kiinni. Demoneiden käynnistämisen jälkeen Nmap löysi kaksi avointa porttia: portin 21 (FTP) ja portin 80 (HTTP). Loput 998 porttia ovat edelleen kiinni.
+
+Palvelujen ja versioiden tunnistus: Koska käytin  -A-parametria, Nmap ei tyytynyt vain toteamaan porttien olevan auki. Se keskusteli palveluiden kanssa ja selvitti tarkat ohjelmistoversiot: portissa 21 pyörii vsftpd 3.0.5 ja portissa 80 Apache httpd 2.4.68.
+
+Skriptien tuoma lisätieto: Parametri -A sisältää myös oletusskriptien ajamisen. Portin 80 tulosteessa näkyy, kuinka Nmap on hakenut web-palvelimelta sivun otsikon (|_http-title: Apache2 Debian Default Page: It works).
+
+Hyökkäyspinta-alan kasvu ja ajankäyttö: Ensimmäinen skannaus kesti todennäköisesti vain sekunnin murto-osan. Tämä skannaus kesti reilu 20 sekuntia, koska Nmap joutui todella tutkimaan avoimia portteja ja päättelemään käyttöjärjestelmää. Tulokset osoittavat konkreettisesti, miten jokainen käynnissä oleva verkkopalvelu luo koneelle uuden rajapinnan ja siten potentiaalisen hyökkäyspinta-alan.
+
+<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/522502f5-82e1-4575-b723-45e136c33f88" />
 
