@@ -2,7 +2,7 @@ Tunkeutumistestaus, Tero Karvinen
 Tunkeutumistestaus - ICI005AS3A-3007 - tt7 - 2026p1 - Tero - to 11:00 pa5001
 Ville Suikki
 
-<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/bf4a6035-7e6a-46f0-a0f6-7ae8e01773e7" /># h5-Elokuu2026
+h5-Elokuu2026
 
 x) Lue/katso ja tiivistä. (Tässä x-alakohdassa ei tarvitse tehdä testejä tietokoneella, vain lukeminen tai kuunteleminen ja tiivistelmä riittää. Tiivistämiseen riittää muutama ranskalainen viiva kustakin artikkelista. Kannattaa lisätä myös jokin oma ajatus, idea, huomio tai kysymys.)
 
