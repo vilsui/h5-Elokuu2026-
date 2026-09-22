@@ -107,5 +107,24 @@ Asensin Kalin pakettienhallinnasta prosessorille tarkoitetun OpenCL-ajurin komen
 
 Tulos: Ohjelma suoritti sanakirjahyökkäyksen onnistuneesti ja paljasti (Status: Cracked), että tiivisteen taustalla oleva alkuperäinen salasana oli "iloveyou".
 
+G) Yritin ensin luoda listaa käsin echo-komennolla, siirryin käyttämään Kalin crunch-työkalua. Generoin sillä listan kaikista 4-numeroisista PIN-koodeista:
+crunch 4 4 0123456789 -o pinkoodit.txt Loin koodista "9999" SHA-256-tiivisteen, jotta pystyin testaamaan listaani:echo -n "9999" | sha256sum | awk '{print $1}' > pin_tiiviste.txt3. Mursin luomani tiivisteen antamalla Hashcatille juuri tekemäni sanalistan:hashcat -m 1400 pin_tiiviste.txt pinkoodit.txt. Koska sanalista oli rajattu tarkasti oikeaan pituuteen ja sisälsi vain 10 000 riviä, Hashcat mursi koodin välittömästi. Oman täsmälistan tekeminen crunch-työkalulla osoittautui erittäin tehokkaaksi tavaksi, jos kohteen salasanapolitiikka (esim. 4 numeron PIN) on tiedossa.
 
-Lähteet:
+<img width="2784" height="1904" alt="image" src="https://github.com/user-attachments/assets/52fc4af5-fe9d-498b-be14-561d653acd3b" />
+
+H) Tehtävänä oli demonstroida Hashcatin sääntöjen käyttöä. Sääntöjen avulla sanalistan sanoja voidaan muokata lennosta (esim. lisätä erikoismerkkejä tai muuttaa kirjainkokoa), mikä säästää levytilaa verrattuna kaikkien variaatioiden generoimiseen sanalistaksi.
+
+Loin tekstitiedoston, jossa oli vain perussana "salasana". Sen jälkeen loin sääntötiedoston (oma.rule), jonka sisältönä oli c $!. Tämä sääntö muuttaa ensimmäisen kirjaimen isoksi (Capitalize) ja lisää loppuun huutomerkin (Append). 
+
+Loin testitiivisteen kohdesanasta "Salasana!". Ensimmäisellä kerralla tiivisteen putkituksessa oli pieni virhe (awk '{print}'), jolloin tiedostoon tallentui tiivisteen lisäksi ylimääräinen viiva. Tämä aiheutti Hashcatissa virheilmoituksen Token length exception, koska se vaatii täysin puhdasta tiivistettä. Korjasin tämän lisäämällä komentoon $1 (awk '{print $1}').
+
+Ajoin Hashcatin komennolla: hashcat -m 1400 saanto_tiiviste.txt perussana.txt -r oma.rule
+
+Hashcat sovelsi sääntöä lennosta perussanaan ("salasana" -> "Salasana!") ja mursi puhtaan tiivisteen välittömästi.
+
+<img width="2696" height="1816" alt="image" src="https://github.com/user-attachments/assets/9ee87b55-f280-42d9-875e-f36a54ddd101" />
+
+
+Lähteet: https://terokarvinen.com/tunkeutumistestaus/#h1-kybertappoketju 
+https://terokarvinen.com/2022/cracking-passwords-with-hashcat/
+https://terokarvinen.com/2023/crack-file-password-with-john/
