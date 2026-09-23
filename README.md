@@ -66,16 +66,16 @@ nmap -T4 -A localhost
 
 D) Avoimet portit: Ensimmäisessä skannauksessa kaikki 1000 porttia olivat kiinni. Demoneiden käynnistämisen jälkeen Nmap löysi kaksi avointa porttia: portin 21 (FTP) ja portin 80 (HTTP). Loput 998 porttia ovat edelleen kiinni.
 
-Palvelujen ja versioiden tunnistus: Koska käytin  -A-parametria, Nmap ei tyytynyt vain toteamaan porttien olevan auki. Se keskusteli palveluiden kanssa ja selvitti tarkat ohjelmistoversiot: portissa 21 pyörii vsftpd 3.0.5 ja portissa 80 Apache httpd 2.4.68.
+Koska käytin  -A-parametria, Nmap ei tyytynyt vain toteamaan porttien olevan auki. Se keskusteli palveluiden kanssa ja selvitti tarkat ohjelmistoversiot: portissa 21 pyörii vsftpd 3.0.5 ja portissa 80 Apache httpd 2.4.68.
 
 Skriptien tuoma lisätieto: Parametri -A sisältää myös oletusskriptien ajamisen. Portin 80 tulosteessa näkyy, kuinka Nmap on hakenut web-palvelimelta sivun otsikon (|_http-title: Apache2 Debian Default Page: It works).
 
-Hyökkäyspinta-alan kasvu ja ajankäyttö: Ensimmäinen skannaus kesti todennäköisesti vain sekunnin murto-osan. Tämä skannaus kesti reilu 20 sekuntia, koska Nmap joutui todella tutkimaan avoimia portteja ja päättelemään käyttöjärjestelmää. Tulokset osoittavat konkreettisesti, miten jokainen käynnissä oleva verkkopalvelu luo koneelle uuden rajapinnan ja siten potentiaalisen hyökkäyspinta-alan.
+Ensimmäinen skannaus kesti todennäköisesti vain sekunnin murto-osan. Tämä skannaus kesti reilu 20 sekuntia, koska Nmap joutui todella tutkimaan avoimia portteja ja päättelemään käyttöjärjestelmää. Tulokset osoittavat, miten jokainen käynnissä oleva verkkopalvelu luo koneelle uuden rajapinnan ja siten potentiaalisen hyökkäyspinta-alan.
 
 <img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/522502f5-82e1-4575-b723-45e136c33f88" />
 
 E) Avasin Kalin terminaalin ja loin ensin tavallisen tekstitiedoston komenolla "echo "Tämä on erittäin salainen viesti" > salaisuus.txt"
-Pakkasin ja salasin tiedoston 7-Zipillä käyttäen salasanaa "snoopy" (joka löytyy  sanalistoista) komennolla: 7z a -psnoopy kohde.7z salaisuus.txt
+Pakkasin ja salasin tiedoston 7-Zipillä käyttäen salasanaa "snoopy" (joka löytyy sanalistoista) komennolla: 7z a -psnoopy kohde.7z salaisuus.txt
 
 <img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/3191b356-7641-4899-ba11-ee8fcf58a475" />
 
